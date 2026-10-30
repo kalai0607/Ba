@@ -1,0 +1,269 @@
+Ex. No: 5
+
+INSTALLATION OF HIVE ALONG WITH PRACTICE EXAMPLES
+
+Date:
+
+AIM:
+
+To write a program for the installation of Hive along with practice examples.
+
+PROCEDURE:
+
+Step 1: Verifying Java Installation
+
+Java must be installed on your system before installing Hive. Verify Java installation using the following command:
+
+java -version
+
+If Java is not installed, download the JDK and extract it using the following commands:
+
+cd Downloads/
+ls
+tar zxf jdk-7u71-linux-x64.gz
+
+Move Java to "/usr/local/":
+
+su
+mv jdk1.7.0_71 /usr/local/
+exit
+
+Set the environment variables in "~/.bashrc":
+
+export JAVA_HOME=/usr/local/jdk1.7.0_71
+export PATH=$PATH:$JAVA_HOME/bin
+source ~/.bashrc
+
+Verify the installation:
+
+java -version
+
+Step 2: Verifying Hadoop Installation
+
+Verify Hadoop installation using:
+
+hadoop version
+
+If Hadoop is not installed, download and extract Hadoop 2.4.1.
+
+Set the Hadoop environment variables in "~/.bashrc":
+
+export HADOOP_HOME=/usr/local/hadoop
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+source ~/.bashrc
+
+Configure the Hadoop files:
+
+- "core-site.xml"
+- "hdfs-site.xml"
+- "yarn-site.xml"
+- "mapred-site.xml"
+
+Format the NameNode:
+
+hdfs namenode -format
+
+Start Hadoop services:
+
+start-dfs.sh
+start-yarn.sh
+
+Step 3: Downloading Hive
+
+Download the Hive archive and verify it using:
+
+cd Downloads
+ls
+
+Step 4: Installing Hive
+
+Extract the Hive archive:
+
+tar zxvf apache-hive-0.14.0-bin.tar.gz
+ls
+
+Move the extracted files to "/usr/local/hive":
+
+su -
+mv apache-hive-0.14.0-bin /usr/local/hive
+exit
+
+Set the Hive environment variables in "~/.bashrc":
+
+export HIVE_HOME=/usr/local/hive
+export PATH=$PATH:$HIVE_HOME/bin
+export CLASSPATH=$CLASSPATH:/usr/local/hadoop/lib/*:.
+export CLASSPATH=$CLASSPATH:/usr/local/hive/lib/*:.
+source ~/.bashrc
+
+Step 5: Configuring Hive
+
+Open the Hive configuration directory:
+
+cd $HIVE_HOME/conf
+cp hive-env.sh.template hive-env.sh
+
+Add the following line to "hive-env.sh":
+
+export HADOOP_HOME=/usr/local/hadoop
+
+Step 6: Downloading and Installing Apache Derby
+
+Download and extract Apache Derby:
+
+wget http://archive.apache.org/dist/db/derby/db-derby-10.4.2.0/db-derby-10.4.2.0-bin.tar.gz
+tar zxvf db-derby-10.4.2.0-bin.tar.gz
+
+Move Derby to "/usr/local/derby":
+
+su -
+mv db-derby-10.4.2.0-bin /usr/local/derby
+exit
+
+Set the Derby environment variables:
+
+export DERBY_HOME=/usr/local/derby
+export PATH=$PATH:$DERBY_HOME/bin
+export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derby.jar:$DERBY_HOME/lib/derbytools.jar
+source ~/.bashrc
+
+Create a directory to store Metastore data:
+
+mkdir $DERBY_HOME/data
+
+Step 7: Configuring Metastore of Hive
+
+Open the Hive configuration directory:
+
+cd $HIVE_HOME/conf
+cp hive-default.xml.template hive-site.xml
+
+Add the following property between the "<configuration>" tags in "hive-site.xml":
+
+<property>
+  <name>javax.jdo.option.ConnectionURL</name>
+  <value>jdbc:derby://localhost:1527/metastore_db;create=true</value>
+  <description>JDBC connect string for a JDBC metastore</description>
+</property>
+
+Create a file named "jpox.properties" and configure the required properties.
+
+Step 8: Verifying Hive Installation
+
+Create the required HDFS directories and set permissions:
+
+hadoop fs -mkdir /tmp
+hadoop fs -mkdir /user/hive/warehouse
+hadoop fs -chmod g+w /tmp
+hadoop fs -chmod g+w /user/hive/warehouse
+
+Start Hive:
+
+cd $HIVE_HOME
+bin/hive
+
+To display all tables:
+
+SHOW TABLES;
+
+HIVE EXAMPLES
+
+OBJECTIVE:
+
+Use Hive to create, alter, and drop databases, tables, views, functions, and indexes.
+
+PROGRAM:
+
+1. Database Creation
+
+CREATE DATABASE database_name;
+
+2. Drop Database
+
+DROP DATABASE IF EXISTS database_name CASCADE;
+
+3. Creating a Table
+
+CREATE TABLE table_name (
+    id INT,
+    name STRING
+);
+
+4. Loading Data into a Table
+
+LOAD DATA LOCAL INPATH '<path>/u.data'
+OVERWRITE INTO TABLE u_data;
+
+5. Alter Table
+
+Rename a table:
+
+ALTER TABLE name RENAME TO new_name;
+
+Add columns:
+
+ALTER TABLE name ADD COLUMNS (age INT);
+
+Change a column:
+
+ALTER TABLE name CHANGE column_name new_name STRING;
+
+6. Creating and Dropping a View
+
+Create a view:
+
+CREATE VIEW view_name AS
+SELECT * FROM table_name;
+
+Drop a view:
+
+DROP VIEW view_name;
+
+7. Functions in Hive
+
+String functions:
+
+- "round()"
+- "ceil()"
+- "substr()"
+- "upper()"
+- "reg_exp()"
+
+Date and time functions:
+
+- "year()"
+- "month()"
+- "day()"
+- "to_date()"
+
+Aggregate functions:
+
+- "sum()"
+- "min()"
+- "max()"
+- "count()"
+- "avg()"
+
+8. Creating an Index
+
+CREATE INDEX index_ip
+ON TABLE log_data(ip_address)
+AS 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler'
+WITH DEFERRED REBUILD;
+
+9. Altering and Rebuilding an Index
+
+ALTER INDEX index_ip_address
+ON log_data REBUILD;
+
+10. Dropping an Index
+
+DROP INDEX INDEX_NAME ON TABLE_NAME;
+
+RESULT:
+
+Thus, the program for the installation of Hive along with practice examples was written, executed, and verified successfully.
